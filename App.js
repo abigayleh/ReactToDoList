@@ -14,10 +14,10 @@ class App extends Component {
       <Router>
         <div className="container">
           <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <a className="navbar-brand" href="https://www.youtube.com/watch?v=SH_XM1HnoGc" target="_blank">
+            <a className="navbar-brand">
               <img src={logo} width="30" height="30" alt="CodingTheSmartWay.com" />
             </a>
-            <a className="navbar-brand" href="https://www.youtube.com/watch?v=hmE9f-TEutc" target="_blank">To Do List</a>
+            <a className="navbar-brand">To Do List</a>
             
             <div className="collpase navbar-collapse">
               <ul className="navbar-nav mr-auto">
