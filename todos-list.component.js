@@ -8,7 +8,15 @@ const Todo = props => (
         <td className={props.todo.todo_completed ? 'completed' : ''}>{props.todo.todo_responsible}</td>
         <td className={props.todo.todo_completed ? 'completed' : ''}>{props.todo.todo_priority}</td>
         <td>
-
+            <input style={{marginLeft: 30}}
+                    type="checkbox"
+                    className="form-check-input"
+                    id="completedCheckbox"
+                    name="completedCheckbox"
+                    checked={props.todo.todo_completed}
+                    value={props.todo.todo_completed}
+                    onChange={() => onChangeHandler(props.todo.todo_completed)}
+            />
         </td>
         <td>
             <Link to={"/edit/"+props.todo._id}>Edit</Link>
@@ -16,9 +24,13 @@ const Todo = props => (
     </tr>
 )
 
+const onChangeHandler = (value) => {
+    value = !value;
+}
+
 export default function TodosList() {
     const [todo, setTodo] = useState([]);
-    
+
     useEffect(() => {
         axios.get('http://localhost:4000/todos/')
             .then(response => {
@@ -28,12 +40,6 @@ export default function TodosList() {
                 console.log(error)
             })
     });
-
-    const listTasks = () => {
-        todo.map(function(currentTodo, index){
-            return <Todo todo={currentTodo} key={index}/>
-        })
-    }
 
         return(
             <div> 
@@ -50,7 +56,11 @@ export default function TodosList() {
                         </tr>
                     </thead>
                     <tbody>
-                        {() => listTasks}   
+                        {
+                            todo.map(function(currentTodo, index){
+                                return <Todo todo={currentTodo} key={index}/>
+                            })
+                        }   
                     </tbody>
                 </table>
             </div>
