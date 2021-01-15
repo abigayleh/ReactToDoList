@@ -18,6 +18,8 @@ connection.once('open', function() {
     console.log('MongoDB database connection has established successfully');
 });
 
+var ObjectID = require('mongodb').ObjectID;
+
 todoRoutes.route('/').get(function(requestObj, responseObj) {
     // Retrieve todo items from database
     Todo.find(function(err, todos) {
@@ -69,6 +71,19 @@ todoRoutes.route('/update/:id').post(function(requestObj, responseObj) {
         }
     });
 });
+
+todoRoutes.route('/delete/:id').delete(function(requestObj, responseObj) {
+    Todo.findById(requestObj.params.id, function(err, todo) {
+        if(todo) {
+            todo.delete().then(todo => {
+                responseObj.json('Deleted');
+            })
+            .catch(err => {
+                responseObj.status(400).send('Failed');
+            });
+        }
+    })
+})
 
 
 app.use('/todos', todoRoutes);
