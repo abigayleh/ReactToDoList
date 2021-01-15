@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { Redirect } from "react-router-dom"
 
-export default function CreateTodo() {
+export default function CreateTodo(props) {
     const [todo_description, changeDescription] = useState('');
     const [todo_responsible, changeResponsible] = useState('');
     const [todo_priority, changePriority] = useState('');
@@ -30,12 +31,15 @@ export default function CreateTodo() {
     changeResponsible('');
     changePriority('');
     changeCompleted(false);
+
+    props.history.push('/');
+
     }
 
     return (
       <div style={{ marginTop: 20 }}>
         <h3>Create a new task</h3>
-        <form onSubmit={() => onSubmit}>
+        <form onSubmit={onSubmit}>
 
           <div className="form-group">
             <label>Description: </label>
@@ -66,7 +70,6 @@ export default function CreateTodo() {
                 name="priorityOptions"
                 id="priorityLow"
                 value="Low"
-                checked={() => changePriority('Low')}
                 onChange={e => changePriority(e.target.value)}
               />
               <label className="form-check-label">Low</label>
@@ -79,7 +82,6 @@ export default function CreateTodo() {
                 name="priorityOptions"
                 id="priorityMedium"
                 value="Medium"
-                checked={() => changePriority('Medium')}
                 onChange={e => changePriority(e.target.value)}
               />
               <label className="form-check-label">Medium</label>
@@ -92,7 +94,6 @@ export default function CreateTodo() {
                 name="priorityOptions"
                 id="priorityHigh"
                 value="High"
-                checked={() => changePriority('High')}
                 onChange={e => changePriority(e.target.value)}
               />
               <label className="form-check-label">High</label>
