@@ -6,6 +6,8 @@ export default function EditTodo(props) {
     const [todo_responsible, changeResponsible] = useState('');
     const [todo_priority, changePriority] = useState('');
     const [todo_completed, changeCompleted] = useState(false);
+    const [todo_deleted, changeDelete] = useState(false);
+
 
     useEffect(() => {
         axios.get('http://localhost:4000/todos/'+props.match.params.id)
@@ -18,7 +20,7 @@ export default function EditTodo(props) {
         .catch(function(error) {
             console.log(error);
         })
-    })
+    }, []);
 
      const onSubmit = (val) => {
           val.preventDefault();
@@ -27,17 +29,27 @@ export default function EditTodo(props) {
               todo_description: todo_description,
               todo_responsible: todo_responsible,
               todo_priority: todo_priority,
-              todo_completed: todo_completed
+              todo_completed: todo_completed,
+              todo_deleted: todo_deleted
           }
-          axios.post('http://localhost:4000/todos/update/'+props.match.params.id, obj)
+
+          if(todo_deleted){
+            axios.delete('http://localhost:4000/todos/delete/'+props.match.params.id)
             .then(responseObj => console.log(responseObj.data));
-         
-      }
+          }
+          else{
+            axios.post('http://localhost:4000/todos/update/'+props.match.params.id, obj)
+            .then(responseObj => console.log(responseObj.data));
+          }
+
+          props.history.push('/');
+        }
 
         return (
           <div>
+            <br/>
             <h3>Edit task</h3>
-            <form onSubmit={() => onSubmit}>
+            <form onSubmit={onSubmit}>
               <div className="form-group">
                 <label>Description: </label>
                 <input
@@ -59,16 +71,6 @@ export default function EditTodo(props) {
               </div>
 
               <div className="form-group">
-                <label>Priority: </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={todo_priority}
-                  onChange={e => changePriority(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
@@ -76,7 +78,7 @@ export default function EditTodo(props) {
                     name="priorityOptions"
                     id="priorityLow"
                     value="Low"
-                    checked={() => changePriority('Low')}
+                    checked={todo_priority === 'Low'}
                     onChange={e => changePriority(e.target.value)}
                   />
                   <label className="form-check-label">Low</label>
@@ -89,7 +91,7 @@ export default function EditTodo(props) {
                     name="priorityOptions"
                     id="priorityMedium"
                     value="Medium"
-                    checked={() => changePriority('Medium')}
+                    checked={todo_priority === 'Medium'}
                     onChange={e => changePriority(e.target.value)}
                   />
                   <label className="form-check-label">Medium</label>
@@ -102,7 +104,7 @@ export default function EditTodo(props) {
                     name="priorityOptions"
                     id="priorityHigh"
                     value="High"
-                    checked={() => changePriority('High')}
+                    checked={todo_priority === 'High'}
                     onChange={e => changePriority(e.target.value)}
                   />
                   <label className="form-check-label">High</label>
@@ -115,12 +117,27 @@ export default function EditTodo(props) {
                     className="form-check-input"
                     id="completedCheckbox"
                     name="completedCheckbox"
-                    onChange={() => changeCompleted(!todo_completed)}
                     checked={todo_completed}
+                    onChange={() => changeCompleted(!todo_completed)}
                     value={todo_completed}
                   />
                   <label className="form-check-label" htmlFor="completedCheckbox">
                       Completed
+                  </label>
+                </div>
+
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="completedCheckbox"
+                    name="completedCheckbox"
+                    checked={todo_deleted}
+                    onChange={() => changeDelete(!todo_deleted)}
+                    value={todo_deleted}
+                  />
+                  <label className="form-check-label" htmlFor="completedCheckbox">
+                      Delete this task
                   </label>
                 </div>
                   <br/>
